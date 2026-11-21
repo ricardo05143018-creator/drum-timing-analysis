@@ -41,6 +41,31 @@ The high correlation raised another question: how much of it came from the way t
 
 This became the starting point for V3, where I tested the relationship using simulated intervals and the IOIs themselves.
 
+## V3 — IOI Construction Diagnostics
+
+To investigate the high correlation from V2, I generated 20,000 sets of independent IOIs using a normal distribution with the same mean and standard deviation as my recording.
+
+For each simulated sequence, I reconstructed the cumulative timing errors using the same method as V1 and V2, then calculated their lag-1 correlation.
+
+The median simulated correlation was **0.8987**. In **15.84%** of the simulations, the correlation was at least as high as the observed value of 0.9433.
+
+I also looked directly at the original IOIs rather than their cumulative deviations.
+
+The results were:
+
+- **Mean IOI:** 319.36 ms
+- **IOI standard deviation:** 37.02 ms
+- **IOI lag-1 correlation:** −0.1760
+- **Pearson p-value:** 0.1511
+
+![IOI construction diagnostics](figures/v3_drum_ioi_construction_diagnostics.png)
+
+The simulation showed that high correlations between cumulative grid errors can appear even when the underlying intervals are generated independently.
+
+Looking at the IOIs themselves gave a much weaker relationship. I also fitted a linear trend to the intervals and found a slope of 0.5421 ms per strike (p = 0.0143), corresponding to an estimated increase of 36.86 ms across the recording.
+
+These results made me more interested in the timing intervals themselves, especially how their variation might be explained beyond a simple correlation.
+
 ## Running the Code
 
 Install the required Python packages:
@@ -61,6 +86,12 @@ Run V2:
 
 ```bash
 python v2_drum_naive_error_dependency.py
+```
+
+Run V3:
+
+```bash
+python v3_drum_ioi_construction_diagnostics.py
 ```
 
 Each script prints its statistics and saves a PNG plot in the working directory. The figures shown above are kept in the `figures/` folder.
