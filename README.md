@@ -66,6 +66,45 @@ Looking at the IOIs themselves gave a much weaker relationship. I also fitted a 
 
 These results made me more interested in the timing intervals themselves, especially how their variation might be explained beyond a simple correlation.
 
+## V4 — Wing-Kristofferson Covariance Decomposition
+
+V3 showed a weak negative lag-1 correlation in the raw IOIs, alongside a positive linear trend. In V4, I used the Wing-Kristofferson model to examine how lag-1 covariance contributes to the variance of the intervals, both before and after detrending.
+
+Since V3 also showed a positive linear trend in the IOIs, I performed the decomposition on both the original intervals and a linearly detrended version.
+
+For each series, I calculated the lag-0 variance and lag-1 covariance, then estimated the model-implied motor and clock variance components:
+
+- **Motor variance:** −γ₁
+- **Clock variance:** γ₀ + 2γ₁
+
+The results were:
+
+| Measure | Raw IOIs | Detrended IOIs |
+| --- | ---: | ---: |
+| Lag-0 variance (ms²) | 1350.35 | 1233.78 |
+| Lag-1 covariance (ms²) | −224.82 | −333.69 |
+| Lag-1 correlation | −0.1760 | −0.2851 |
+| Pearson p-value | 0.1511 | 0.0184 |
+| Model-implied motor variance (ms²) | 224.82 | 333.69 |
+| Model-implied clock variance (ms²) | 900.72 | 566.40 |
+
+![Wing-Kristofferson diagnostics](figures/v4_drum_wing_kristofferson_diagnostics.png)
+
+I also checked the raw IOIs across the first six lags to see how their correlations and autocovariances changed beyond adjacent intervals.
+
+| Lag | Correlation | Pearson p-value | Autocovariance (ms²) |
+| ---: | ---: | ---: | ---: |
+| 1 | −0.1760 | 0.1511 | −224.82 |
+| 2 | −0.0864 | 0.4870 | −110.00 |
+| 3 | 0.0407 | 0.7458 | 51.69 |
+| 4 | 0.1090 | 0.3872 | 137.17 |
+| 5 | 0.1809 | 0.1525 | 216.65 |
+| 6 | 0.0768 | 0.5495 | 87.18 |
+
+The decomposition changed after removing the fitted linear trend. The estimated motor component increased, while the clock component decreased.
+
+V5 examines how changes in onset-detection resolution affect the detected IOIs and the resulting variance estimates.
+
 ## Running the Code
 
 Install the required Python packages:
@@ -92,6 +131,12 @@ Run V3:
 
 ```bash
 python v3_drum_ioi_construction_diagnostics.py
+```
+
+Run V4:
+
+```bash
+python v4_drum_wing_kristofferson_diagnostics.py
 ```
 
 Each script prints its statistics and saves a PNG plot in the working directory. The figures shown above are kept in the `figures/` folder.
